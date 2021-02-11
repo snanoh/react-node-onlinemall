@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import {Typography, Button, Form, Input} from 'antd';
+import FileUpload from '../../utils/FileUpload'
 
 const {TextArea} = Input;
 
@@ -54,6 +55,10 @@ function UploadProductPage() {
         setContinent(event.currentTarget.value)
     }
 
+    const updateImages = (newImages) =>{
+        setImage(newImages)
+    }
+
     return (
         <div
             style={{
@@ -70,6 +75,7 @@ function UploadProductPage() {
 
             <Form>
                 {/* Drop Zone */}
+                <FileUpload refreshFunction={updateImages} />
                 <br/>
                 <br/>
                 <label>이름</label>
