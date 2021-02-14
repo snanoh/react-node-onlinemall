@@ -6,6 +6,7 @@ import Meta from 'antd/lib/card/Meta'
 import ImageSlider from '../../utils/ImageSlider'
 import CheckBox from './Sections/CheckBox'
 import RadioBox from './Sections/RadioBox'
+import SearchFeature from './Sections/SearchFeature'
 import { continents , price } from './Sections/Datas'
 
 function LandingPage() {
@@ -18,16 +19,17 @@ function LandingPage() {
         continents: [],
         price: []
     });
+    const [SearchTerm, setSearchTerm] = useState("")
 
     useEffect(() => {
         let body = {
             skip: Skip,
             limit: Limit
         }
-        getProducsts(body)
+        getProducts(body)
     }, [])
 
-    const getProducsts = (body) => {
+    const getProducts = (body) => {
         axios
             .post('/api/product/products', body)
             .then(response => {
@@ -56,7 +58,7 @@ function LandingPage() {
             loadMore: true
         }
 
-        getProducsts(body)
+        getProducts(body)
         setSkip(skip)
     }
 
@@ -78,7 +80,7 @@ function LandingPage() {
             filters: filters
         }
 
-        getProducsts(body)
+        getProducts(body)
         setSkip(0)
     }
 
@@ -108,6 +110,20 @@ function LandingPage() {
 
         showFilteredResults(newFilters)
         setFilters(newFilters)
+    }
+
+    const updateSearchTerm = (newSearchTerm) => {
+
+        let body = {
+            skip: 0,
+            limit: Limit,
+            filters: Filters,
+            searchTerm : newSearchTerm
+        }
+
+        setSkip(0)
+        setSearchTerm(newSearchTerm)
+        getProducts(body)
     }
 
     return (
@@ -140,6 +156,12 @@ function LandingPage() {
             </Row>
             
             {/* Search */}
+            <div style={{ display:'flex', justifyContent:'flex-end', margin: '1rem auto' }}>
+                <SearchFeature 
+                    refreshFunction={updateSearchTerm}
+                />
+            </div>
+
             {/* Cards */}
             <Row gutter={[16, 15]}>
                 {renderCards}
