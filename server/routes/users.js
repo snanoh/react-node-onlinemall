@@ -18,6 +18,8 @@ router.get("/auth", auth, (req, res) => {
         lastname: req.user.lastname,
         role: req.user.role,
         image: req.user.image,
+        cart: req.user.cart,
+        history: req.user.history
     });
 });
 
@@ -76,21 +78,21 @@ router.post("/addToCart", auth, (req, res) => {
         let duplicate = false;
         userInfo.cart.forEach((item) => {
             if(item.id === req.body.productId){
-                duplicate = ture;
+                duplicate = true;
             }
         })
 
         //상품이 이미 있을 때
-        if(duplicate){
+        if (duplicate) {
             User.findOneAndUpdate(
-                { _id : req.user._id, "cart.id" : req.body.productId },
-                { $inc : { "cart.$.quantity" : 1 } },
-                { new : true },
-                (err, userInfo) =>{
-                    if(err) return res.status(400).json({ success: false, err })
+                { _id: req.user._id, "cart.id": req.body.productId },
+                { $inc: { "cart.$.quantity": 1 } },
+                { new: true },
+                (err, userInfo) => {
+                    if (err) return res.status(200).json({ success: false, err })
                     res.status(200).send(userInfo.cart)
                 }
-                )
+            )
         }
         //상품이 이미 있지 않을 때
         else {
